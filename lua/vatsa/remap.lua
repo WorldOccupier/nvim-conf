@@ -91,3 +91,24 @@ vim.keymap.set({ "n", "x" }, "<leader>re", function()
     return require("refactoring").extract_func()
 end,
 { desc = "Extract Function", expr = true })
+
+vim.keymap.set(
+  "n",
+  "<leader>dv",
+  "<cmd>DiffviewOpen<CR>",
+  { silent = true, desc = "Open Diffview" }
+)
+
+vim.keymap.set(
+  "n",
+  "<leader>dq",
+  "<cmd>DiffviewClose<CR>",
+  { silent = true, desc = "Close Diffview" }
+)
+
+vim.keymap.set(
+  "n",
+  "<leader>dh",
+  "<cmd>DiffviewFileHistory<CR>",
+  { silent = true, desc = "Diffview File History" }
+)
