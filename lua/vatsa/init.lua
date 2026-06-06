@@ -2,7 +2,7 @@ require("vatsa.set")
 require("vatsa.remap")
 require("vatsa.lazy_init")
 
-vim.cmd.colorscheme "catppuccin-nvim"
+vim.cmd.colorscheme "carbonfox"
 
 local augroup = vim.api.nvim_create_augroup
 local VatsaGroup = augroup('Vatsa', {})
@@ -113,31 +113,39 @@ require('lualine').setup {
   extensions = {}
 }
 
-  -- disable netrw at the very start of your init.lua
-  vim.g.loaded_netrw = 1
-  vim.g.loaded_netrwPlugin = 1
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
-  -- optionally enable 24-bit colour
-  vim.opt.termguicolors = true
+-- optionally enable 24-bit colour
+vim.opt.termguicolors = true
 
-  -- empty setup using defaults
-  require("nvim-tree").setup()
+-- empty setup using defaults
+require("nvim-tree").setup()
 
-  -- OR setup with a config
+-- OR setup with a config
 
-  ---@type nvim_tree.config
-  local config = {
+---@type nvim_tree.config
+local config = {
     sort = {
-      sorter = "case_sensitive",
+        sorter = "case_sensitive",
     },
     view = {
-      width = 30,
+        width = 30,
     },
     renderer = {
-      group_empty = true,
+        group_empty = true,
     },
     filters = {
-      dotfiles = true,
+        dotfiles = true,
     },
-  }
-  require("nvim-tree").setup(config)
+}
+require("nvim-tree").setup(config)
+
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold"}, {
+  callback = function()
+    if vim.bo.modified then return end
+    vim.cmd("checktime")
+  end,
+})
