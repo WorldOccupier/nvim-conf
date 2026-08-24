@@ -156,3 +156,25 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format()
   end,
 })
+
+require('nvim-agent-comments').setup({
+  signs = true,
+  store_name = '.nvim-agent-comments.json',
+  context_lines = 2,
+  keymaps = {
+   n = {
+      ['<leader>aca'] = '<cmd>NvimAgentCommentsAdd<cr>',
+      ['<leader>ace'] = '<cmd>NvimAgentCommentsEdit<cr>',
+      ['<leader>acd'] = '<cmd>NvimAgentCommentsDelete<cr>',
+      ['<leader>acj'] = '<cmd>NvimAgentCommentsJump<cr>',
+      ['<leader>acr'] = '<cmd>NvimAgentCommentsReanchor<cr>',
+      ['<leader>act'] = '<cmd>NvimAgentCommentsRetrieve<cr>',
+      ['<leader>acl'] = '<cmd>NvimAgentCommentsList<cr>',
+      ['<leader>acs'] = '<cmd>NvimAgentCommentsSearch<cr>',
+    },
+    x = {
+      ['<leader>aca'] = ':NvimAgentCommentsAddVisual<cr>',
+      ['<leader>acr'] = ':NvimAgentCommentsReanchor<cr>',
+    },
+  },
+})
