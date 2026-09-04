@@ -12,6 +12,7 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "mfussenegger/nvim-jdtls",
     },
 
     config = function()
@@ -30,6 +31,7 @@ return {
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
+            automatic_enable = { exclude = { "jdtls" } },
             ensure_installed = {
                 "lua_ls",
                 "rust_analyzer",
@@ -99,6 +101,29 @@ return {
                 end,
             }
         })
+
+        local function start_jdtls()
+            local root = vim.fs.root(0, { "gradlew", "mvnw", ".git" })
+            if root then
+                require("jdtls").start_or_attach({
+                    cmd = { "jdtls" },
+                    root_dir = root,
+                    capabilities = capabilities,
+                    settings = {
+                        java = {
+                            format = {
+                                settings = {
+                                    url = vim.fn.stdpath("config") .. "/java-formatter.xml",
+                                    profile = "Allman",
+                                },
+                            },
+                        },
+                    },
+                })
+            end
+        end
+        vim.api.nvim_create_autocmd("FileType", { pattern = "java", callback = start_jdtls })
+        if vim.bo.filetype == "java" then start_jdtls() end
 
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 

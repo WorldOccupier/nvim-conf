@@ -3,6 +3,7 @@ require("vatsa.remap")
 require("vatsa.lazy_init")
 
 vim.cmd.colorscheme "carbonfox"
+vim.api.nvim_set_hl(0, "@lsp.type.modifier.java", { link = "Keyword" })
 
 local augroup = vim.api.nvim_create_augroup
 local VatsaGroup = augroup('Vatsa', {})
@@ -35,6 +36,23 @@ autocmd({"BufWritePre"}, {
     group = VatsaGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
+})
+
+autocmd({ "BufNewFile", "BufReadPost" }, {
+    group = VatsaGroup,
+    pattern = "*.java",
+    callback = function()
+        local path = vim.fn.expand("%:p")
+        local package = path:match("/src/main/java/(.+)/[^/]+%.java$")
+            or path:match("/src/test/java/(.+)/[^/]+%.java$")
+
+        if package and vim.api.nvim_buf_line_count(0) == 1 and vim.api.nvim_get_current_line() == "" then
+            vim.api.nvim_buf_set_lines(0, 0, 0, false, {
+                "package " .. package:gsub("/", ".") .. ";",
+                "",
+            })
+        end
+    end,
 })
 
 autocmd('LspAttach', {
@@ -154,6 +172,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.go",
   callback = function()
     vim.lsp.buf.format()
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.java",
+  callback = function()
+    vim.lsp.buf.format({ async = false })
   end,
 })
 
